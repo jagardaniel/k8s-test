@@ -10,8 +10,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// test comment
-
 func main() {
 	// Initialize handler and insert some data
 	db := map[int]*model.Person{
