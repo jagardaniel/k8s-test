@@ -10,18 +10,27 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func contentTypeMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	// Initialize handler and insert some data
-	db := map[int]*model.Person{
-		1: {FirstName: "Daniel", LastName: "Danielsson", Age: 29},
-		2: {FirstName: "Kajsa", LastName: "Kajsasson", Age: 34},
-		3: {FirstName: "Anna", LastName: "Annasson", Age: 64},
-		4: {FirstName: "Bengt", LastName: "Bengtsson", Age: 12},
-		5: {FirstName: "Olle", LastName: "Ollesson", Age: 98},
+	db := []*model.User{
+		{ID: 1, Name: "Daniel1337", Email: "daniel@mail.se"},
+		{ID: 2, Name: "AnnaPanna", Email: "anna@mail.se"},
+		{ID: 3, Name: "Trollfar", Email: "troll@mail.se"},
+		{ID: 4, Name: "Kakburken", Email: "kaka@mail.se"},
 	}
 	h := &handler.Handler{DB: db}
 
 	r := mux.NewRouter()
+
+	// Middleware
+	r.Use(contentTypeMiddleware)
 
 	srv := &http.Server{
 		Handler:      r,
@@ -32,10 +41,8 @@ func main() {
 	}
 
 	// Routes
-	r.HandleFunc("/health", h.HealthCheck).Methods("GET")
-	r.HandleFunc("/persons", h.ListPersons).Methods("GET")
-	r.HandleFunc("/persons/{id}", h.GetPerson).Methods("GET")
-	r.HandleFunc("/persons/{id}", h.DeletePerson).Methods("DELETE")
+	r.HandleFunc("/users", h.ListUsers).Methods("GET")
+	r.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
 
 	log.Println("Listening on :8000")
 	log.Fatal(srv.ListenAndServe())
