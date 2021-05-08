@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: k8s-test
+      tier: frontend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: k8s-test
+        tier: frontend
+    spec:
+      containers:
+        - name: k8s-test-frontend
+          image: "jagardaniel/k8s-test-frontend:latest"
+          ports:
+            - containerPort: 80
