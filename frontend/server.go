@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -96,8 +97,15 @@ func getEnv(key, fallback string) string {
 
 func main() {
 	// Check if environment variables are set, otherwise use a default value
-	address := getEnv("FRONTEND_ADDRESS", ":8080")
-	apiUrl := getEnv("FRONTEND_API_URL", "http://127.0.0.1:8000")
+	portEnv := getEnv("SERVER_PORT", "8080")
+	apiUrl := getEnv("API_URL", "http://127.0.0.1:8000")
+
+	port, err := strconv.Atoi(portEnv)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	address := fmt.Sprintf(":%d", port)
 
 	// Parse templates or panic if they cannot be found
 	tmpl := make(map[string]*template.Template)

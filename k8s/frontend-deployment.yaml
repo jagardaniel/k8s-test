@@ -18,5 +18,10 @@ spec:
       containers:
         - name: k8s-test-frontend
           image: "jagardaniel/k8s-test-frontend:latest"
+          env:
+            - name: SERVER_PORT
+              value: 1338
+            - name: API_URL
+              value: http://backend
           ports:
-            - containerPort: 8080
+            - containerPort: 1338
