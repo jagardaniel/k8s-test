@@ -7,10 +7,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
-  # Can't reach the API yet!
   frontend:
     build:
       context: frontend/
       dockerfile: Dockerfile
     ports:
-      - 8080:80
+      - 8080:8080
+    environment:
+      - FRONTEND_API_URL=http://backend:8000

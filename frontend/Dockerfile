@@ -1,22 +1,19 @@
 # Step 1: Build stage
-FROM node:lts AS builder
+FROM golang:1.16.3-alpine AS builder
+
+RUN apk update && apk add --no-cache git
 
 WORKDIR /build
 
-COPY package.json package-lock.json ./
-
-RUN npm cache clean --force
-RUN npm install
-
 COPY . .
+RUN CGO_ENABLED=0 go build -o /build/app
 
-RUN npm run build
+RUN ls -la /build/templates
 
 # Step 2: Build a small image
-FROM nginx:1.19-alpine
+FROM scratch
 
-COPY --from=builder /build/dist/frontend /usr/share/nginx/html
+COPY --from=builder /build/app /
+COPY --from=builder /build/templates /templates/
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/app"]

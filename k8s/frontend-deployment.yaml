@@ -19,4 +19,4 @@ spec:
         - name: k8s-test-frontend
           image: "jagardaniel/k8s-test-frontend:latest"
           ports:
-            - containerPort: 80
+            - containerPort: 8080

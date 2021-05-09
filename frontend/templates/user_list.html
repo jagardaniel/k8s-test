@@ -1,0 +1,10 @@
+{{define "title"}}User list{{end}}
+{{define "content"}}
+<h2>User list</h2>
+
+<ul>
+  {{range .}}
+      <li><a href="/user/{{.ID}}">{{.Name}}</a></li>
+  {{end}}
+</ul>
+{{end}}
